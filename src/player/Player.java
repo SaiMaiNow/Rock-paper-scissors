@@ -21,7 +21,7 @@ public class Player {
         return move;
     }
 
-    private void recordMove(Move move) {
+    public void recordMove(Move move) {
         moveHistory.add(move);
         if (moveHistory.size() > HISTORY_SIZE) {
             moveHistory.remove(0);

@@ -17,23 +17,26 @@ public class RockPaperScissorsGame {
         this.computer = new ComputerPlayer();
         this.stats = new GameStats();
         this.ui = new GameUI();
+
+        this.ui.addPropertyChangeListener("playerMove", evt -> {
+            Move playerMove = (Move) evt.getNewValue();
+            handleGameTurn(playerMove);
+        });
     }
 
     public void start() {
-        while (true) {
-            ui.displayStats(stats);
-            ui.displayMenu();
-            
-            Move playerMove = player.makeMove(ui.getPlayerChoice());
-            if (playerMove == null) continue;
-            
-            Move computerMove = computer.makeMove(player.getHistory());
-            
-            GameResult result = determineWinner(playerMove, computerMove);
-            stats.recordResult(result);
-            
-            ui.displayResult(playerMove, computerMove, result);
-        }
+        ui.setGameStats(stats);
+        ui.setVisible(true);
+    }
+
+    private void handleGameTurn(Move playerMove) {
+        Move computerMove = computer.makeMove(player.getHistory());
+        player.recordMove(playerMove);
+        
+        GameResult result = determineWinner(playerMove, computerMove);
+        stats.recordResult(result);
+        
+        ui.displayResult(playerMove, computerMove, result);
     }
 
     private GameResult determineWinner(Move playerMove, Move computerMove) {
